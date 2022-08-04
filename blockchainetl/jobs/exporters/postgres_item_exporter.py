@@ -48,7 +48,10 @@ class PostgresItemExporter:
             if item_group:
                 connection = self.engine.connect()
                 converted_items = list(self.convert_items(item_group))
+                # TODO: this is going to be deprecated in 2.0 by SQLAlchemy
+                connection.execute("SET SESSION search_path='ethereum'")
                 connection.execute(insert_stmt, converted_items)
+ 
 
     def convert_items(self, items):
         for item in items:
@@ -60,7 +63,6 @@ class PostgresItemExporter:
 
     def close(self):
         pass
-
 
 def group_by_item_type(items):
     result = collections.defaultdict(list)
